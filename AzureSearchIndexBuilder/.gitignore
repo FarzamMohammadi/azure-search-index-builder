@@ -12,3 +12,4 @@ bld/
 
 #Rider
 .idea/
+*.user

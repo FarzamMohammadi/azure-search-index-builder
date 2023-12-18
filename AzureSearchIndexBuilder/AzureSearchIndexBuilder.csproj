@@ -7,4 +7,20 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Azure.Data.Tables" Version="12.8.2" />
+        <PackageReference Include="Azure.Identity" Version="1.10.4" />
+        <PackageReference Include="Azure.ResourceManager" Version="1.9.0" />
+        <PackageReference Include="Azure.ResourceManager.Resources" Version="1.7.0" />
+        <PackageReference Include="Azure.ResourceManager.Storage" Version="1.2.0" />
+        <PackageReference Include="Azure.Storage.Common" Version="12.19.0-beta.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\books.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
