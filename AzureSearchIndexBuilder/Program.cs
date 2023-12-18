@@ -1,19 +1,29 @@
 ﻿// Azure Storage Table creation
 // Do this in portal
 
-// Table creation and data insertion
-
-using Azure.Data.Tables;
+using Microsoft.Extensions.Configuration;
 using AzureSearchIndexBuilder.Models;
+using Azure.Data.Tables;
 using Newtonsoft.Json;
+
+// Project configuration
+var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+var configuration = builder.Build();
+
+var appSettings = new AppSettings();
+configuration.Bind(appSettings);
+
+// Table creation and data insertion
+var storageAccountName = appSettings.AzureStorageAccount.Name;
+var storageAccountKey = appSettings.AzureStorageAccount.Key;
 
 var serviceClient = new TableServiceClient
 (
-    new Uri("TABLE_ENDPOINT - E.G: https://{STORAGE_ACCOUNT_NAME}.table.core.windows.net/"),
+    new Uri($"https://{storageAccountName}.table.core.windows.net/"),
     new TableSharedKeyCredential
     (
-        "STORAGE_ACCOUNT_NAME - Displayed at the very top of the 'Storage Account' overview.",
-        "STORAGE_ACCOUNT_KEY - Available in the portal under 'Access Keys'"
+        storageAccountName,
+        storageAccountKey
     )
 );
 
