@@ -1,6 +1,6 @@
 ﻿[
   {
-    "Id": 1,
+    "Id": "1",
     "Title": "The Great Gatsby",
     "Author": "F. Scott Fitzgerald",
     "Genre": "Fiction",
@@ -8,7 +8,7 @@
     "Price": 24.99
   },
   {
-    "Id": 2,
+    "Id": "2",
     "Title": "1984",
     "Author": "George Orwell",
     "Genre": "Dystopian",
@@ -16,7 +16,7 @@
     "Price": 19.99
   },
   {
-    "Id": 3,
+    "Id": "3",
     "Title": "To Kill a Mockingbird",
     "Author": "Harper Lee",
     "Genre": "Fiction",
@@ -24,7 +24,7 @@
     "Price": 18.99
   },
   {
-    "Id": 4,
+    "Id": "4",
     "Title": "The Catcher in the Rye",
     "Author": "J.D. Salinger",
     "Genre": "Fiction",
@@ -32,7 +32,7 @@
     "Price": 20.99
   },
   {
-    "Id": 5,
+    "Id": "5",
     "Title": "Brave New World",
     "Author": "Aldous Huxley",
     "Genre": "Dystopian",
@@ -40,7 +40,7 @@
     "Price": 22.99
   },
   {
-    "Id": 6,
+    "Id": "6",
     "Title": "The Hobbit",
     "Author": "J.R.R. Tolkien",
     "Genre": "Fantasy",
@@ -48,7 +48,7 @@
     "Price": 21.99
   },
   {
-    "Id": 7,
+    "Id": "7",
     "Title": "Pride and Prejudice",
     "Author": "Jane Austen",
     "Genre": "Romance",
@@ -56,7 +56,7 @@
     "Price": 18.99
   },
   {
-    "Id": 8,
+    "Id": "8",
     "Title": "Moby Dick",
     "Author": "Herman Melville",
     "Genre": "Adventure",
@@ -64,7 +64,7 @@
     "Price": 22.99
   },
   {
-    "Id": 9,
+    "Id": "9",
     "Title": "Book Title 9",
     "Author": "Author 9",
     "Genre": "Other Genre",
@@ -72,7 +72,7 @@
     "Price": 24.990000000000002
   },
   {
-    "Id": 10,
+    "Id": "10",
     "Title": "Book Title 10",
     "Author": "Author 10",
     "Genre": "Genre",
@@ -80,7 +80,7 @@
     "Price": 25.990000000000002
   },
   {
-    "Id": 11,
+    "Id": "11",
     "Title": "Book Title 11",
     "Author": "Author 11",
     "Genre": "Other Genre",
@@ -88,7 +88,7 @@
     "Price": 26.990000000000002
   },
   {
-    "Id": 12,
+    "Id": "12",
     "Title": "Book Title 12",
     "Author": "Author 12",
     "Genre": "Genre",
@@ -96,7 +96,7 @@
     "Price": 27.990000000000002
   },
   {
-    "Id": 13,
+    "Id": "13",
     "Title": "Book Title 13",
     "Author": "Author 13",
     "Genre": "Other Genre",
@@ -104,7 +104,7 @@
     "Price": 28.990000000000002
   },
   {
-    "Id": 14,
+    "Id": "14",
     "Title": "Book Title 14",
     "Author": "Author 14",
     "Genre": "Genre",
@@ -112,7 +112,7 @@
     "Price": 29.990000000000002
   },
   {
-    "Id": 15,
+    "Id": "15",
     "Title": "Book Title 15",
     "Author": "Author 15",
     "Genre": "Other Genre",
@@ -120,7 +120,7 @@
     "Price": 30.990000000000002
   },
   {
-    "Id": 16,
+    "Id": "16",
     "Title": "Book Title 16",
     "Author": "Author 16",
     "Genre": "Genre",
@@ -128,7 +128,7 @@
     "Price": 31.990000000000002
   },
   {
-    "Id": 17,
+    "Id": "17",
     "Title": "Book Title 17",
     "Author": "Author 17",
     "Genre": "Other Genre",
@@ -136,7 +136,7 @@
     "Price": 32.99
   },
   {
-    "Id": 18,
+    "Id": "18",
     "Title": "Book Title 18",
     "Author": "Author 18",
     "Genre": "Genre",
@@ -144,7 +144,7 @@
     "Price": 33.99
   },
   {
-    "Id": 19,
+    "Id": "19",
     "Title": "Book Title 19",
     "Author": "Author 19",
     "Genre": "Other Genre",
@@ -152,7 +152,7 @@
     "Price": 34.99
   },
   {
-    "Id": 20,
+    "Id": "20",
     "Title": "Book Title 20",
     "Author": "Author 20",
     "Genre": "Genre",
@@ -160,7 +160,7 @@
     "Price": 35.99
   },
   {
-    "Id": 21,
+    "Id": "21",
     "Title": "Book Title 21",
     "Author": "Author 21",
     "Genre": "Other Genre",
@@ -168,7 +168,7 @@
     "Price": 36.99
   },
   {
-    "Id": 22,
+    "Id": "22",
     "Title": "Book Title 22",
     "Author": "Author 22",
     "Genre": "Genre",
@@ -176,7 +176,7 @@
     "Price": 37.99
   },
   {
-    "Id": 23,
+    "Id": "23",
     "Title": "Book Title 23",
     "Author": "Author 23",
     "Genre": "Other Genre",
@@ -184,7 +184,7 @@
     "Price": 38.99
   },
   {
-    "Id": 24,
+    "Id": "24",
     "Title": "Book Title 24",
     "Author": "Author 24",
     "Genre": "Genre",
@@ -192,7 +192,7 @@
     "Price": 39.99
   },
   {
-    "Id": 25,
+    "Id": "25",
     "Title": "Book Title 25",
     "Author": "Author 25",
     "Genre": "Other Genre",
@@ -200,7 +200,7 @@
     "Price": 40.99
   },
   {
-    "Id": 26,
+    "Id": "26",
     "Title": "Book Title 26",
     "Author": "Author 26",
     "Genre": "Genre",
@@ -208,7 +208,7 @@
     "Price": 41.99
   },
   {
-    "Id": 27,
+    "Id": "27",
     "Title": "Book Title 27",
     "Author": "Author 27",
     "Genre": "Other Genre",
@@ -216,7 +216,7 @@
     "Price": 42.99
   },
   {
-    "Id": 28,
+    "Id": "28",
     "Title": "Book Title 28",
     "Author": "Author 28",
     "Genre": "Genre",
@@ -224,7 +224,7 @@
     "Price": 43.99
   },
   {
-    "Id": 29,
+    "Id": "29",
     "Title": "Book Title 29",
     "Author": "Author 29",
     "Genre": "Other Genre",
@@ -232,7 +232,7 @@
     "Price": 44.99
   },
   {
-    "Id": 30,
+    "Id": "30",
     "Title": "Book Title 30",
     "Author": "Author 30",
     "Genre": "Genre",

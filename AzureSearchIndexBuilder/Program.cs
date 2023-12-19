@@ -1,9 +1,12 @@
 ﻿// Azure Storage Table creation
 // Do this in portal
 
+using Azure;
 using Microsoft.Extensions.Configuration;
 using AzureSearchIndexBuilder.Models;
 using Azure.Data.Tables;
+using Azure.Search.Documents.Indexes;
+using Azure.Search.Documents.Indexes.Models;
 using Newtonsoft.Json;
 
 // Project configuration
@@ -39,16 +42,29 @@ var books = JsonConvert.DeserializeObject<List<Book>>(jsonFileContent) ?? throw 
 foreach (var book in books)
 {
     book.PartitionKey = book.Genre;
-    book.RowKey = book.Id.ToString();
+    book.RowKey = book.Id;
 
     await tableClient.AddEntityAsync(book);
 }
 
 // Create Entity (with filterable and sortable and whatever else fields)
 
-// Create Data Source Connection
-// Create Indexer
-// Create Index
-// Query data for the fields we setup in the index
+// Create Search Service
+// Do this in portal
 
-Console.WriteLine("sadf");
+// Prepare Search Service client
+// Create Index
+var searchServiceEndpoint = appSettings.AzureSearchService.Url;
+var searchServiceAdminApiKey = appSettings.AzureSearchService.AdminApiKey;
+
+var searchIndexClient = new SearchIndexClient(new Uri(searchServiceEndpoint), new AzureKeyCredential(searchServiceAdminApiKey));
+
+var fieldBuilder = new FieldBuilder();
+var searchFields = fieldBuilder.Build(typeof(Book));
+
+var searchIndexDefinition = new SearchIndex("my-index", searchFields);
+searchIndexClient.CreateOrUpdateIndex(searchIndexDefinition);
+
+// Create Indexer
+// Create Data Source Connection
+// Query data for the fields we setup in the index
