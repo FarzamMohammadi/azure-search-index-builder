@@ -5,8 +5,10 @@ using Azure;
 using Microsoft.Extensions.Configuration;
 using AzureSearchIndexBuilder.Models;
 using Azure.Data.Tables;
+using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
+using Azure.Search.Documents.Models;
 using Newtonsoft.Json;
 
 // Project configuration
@@ -88,3 +90,78 @@ searchIndexerClient.ResetIndexer(searchIndexer.Name);
 searchIndexerClient.RunIndexer(searchIndexer.Name);
 
 // Query data for the fields we setup in the index
+var searchClient = new SearchClient(new Uri(searchServiceEndpoint), searchIndex.Name, new AzureKeyCredential(searchServiceAdminApiKey));
+RunQueries(searchClient);
+return;
+
+static void RunQueries(SearchClient searchClient)
+{
+    Console.WriteLine("Query 1: Search for 'George Orwell':\n");
+
+    var options = new SearchOptions();
+
+    GrabAllBookPropertiesFromTheIndex(options);
+
+    SearchResults<Book> results = searchClient.Search<Book>("George Orwell", options);
+
+    WriteDocuments(results);
+
+    Console.Write("Query 2: Apply a filter to find books cheaper than $25, order by Price in descending order:\n");
+
+    options = new SearchOptions
+    {
+        Filter = "Price lt 25",
+        OrderBy = { "Price desc" }
+    };
+
+    GrabAllBookPropertiesFromTheIndex(options);
+
+    results = searchClient.Search<Book>("*", options);
+
+    WriteDocuments(results);
+
+    Console.Write("Query 3: Search all the books, order by published year in ascending order, take the top 5 results:\n");
+
+    options = new SearchOptions
+    {
+        Size = 5,
+        OrderBy = { "PublishedYear asc" }
+    };
+
+    GrabAllBookPropertiesFromTheIndex(options);
+
+    results = searchClient.Search<Book>("*", options);
+
+    WriteDocuments(results);
+
+    Console.WriteLine("Query 4: Search the Title field for the term 'Mockingbird':\n");
+
+    options = new SearchOptions();
+    options.SearchFields.Add("Title");
+
+    GrabAllBookPropertiesFromTheIndex(options);
+
+    results = searchClient.Search<Book>("Mockingbird", options);
+
+    WriteDocuments(results);
+}
+
+static void WriteDocuments(SearchResults<Book> searchResults)
+{
+    foreach (var result in searchResults.GetResults())
+    {
+        Console.WriteLine(result.Document.ToString());
+    }
+
+    Console.WriteLine();
+}
+
+static void GrabAllBookPropertiesFromTheIndex(SearchOptions options)
+{
+    options.Select.Add("Id");
+    options.Select.Add("Title");
+    options.Select.Add("Author");
+    options.Select.Add("Genre");
+    options.Select.Add("PublishedYear");
+    options.Select.Add("Price");
+}
