@@ -5,7 +5,11 @@ using AzureSearchIndexBuilder.Models;
 
 namespace AzureSearchIndexBuilder;
 
-public class SearchServiceManager(string searchServiceEndpoint, string searchServiceAdminApiKey)
+public class SearchServiceManager
+(
+    string searchServiceEndpoint,
+    string searchServiceAdminApiKey
+)
 {
     private readonly SearchServiceAuthentication _searchServiceAuthentication = new()
     {

@@ -81,16 +81,6 @@ public class SearchIndexDataRetriever
         return results;
     }
 
-    public void PrintSearchResults(SearchResults<Book> searchResults)
-    {
-        foreach (var result in searchResults.GetResults())
-        {
-            Console.WriteLine(result.Document.ToString());
-        }
-
-        Console.WriteLine();
-    }
-
     private static void GrabAllBookFieldsFromTheIndex(SearchOptions options)
     {
         options.Select.Add("Id");
