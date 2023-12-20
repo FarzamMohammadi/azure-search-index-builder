@@ -35,10 +35,15 @@ public class Book : ITableEntity
     [SimpleField(IsFilterable = true, IsSortable = true)]
     public int PublishedYear { get; set; }
 
-    [SimpleField(IsSortable = true)]
+    [SimpleField(IsSortable = true, IsFilterable = true)]
     public double Price { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Id: {Id}, Title: {Title}, Author: {Author}, Genre: {Genre}, PublishedYear: {PublishedYear}, Price: {Price}";
+    }
 }
 
 // Sortable Fields: PublishedYear and Price. These fields are numerical and inherently sortable.
-// Filterable Fields: Author, Genre, and PublishedYear. It's a categorical field suitable for filtering.
+// Filterable Fields: Author, Genre, and PublishedYear, Price. It's a categorical field suitable for filtering.
 // Searchable Fields: Title and Author. These are textual fields, perfect for full-text search.
