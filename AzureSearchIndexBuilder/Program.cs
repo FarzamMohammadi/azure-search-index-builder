@@ -1,167 +1,76 @@
-﻿// Azure Storage Table creation
-// Do this in portal
-
-using Azure;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using AzureSearchIndexBuilder.Models;
-using Azure.Data.Tables;
-using Azure.Search.Documents;
-using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Indexes.Models;
-using Azure.Search.Documents.Models;
-using Newtonsoft.Json;
+using AzureSearchIndexBuilder;
 
 // Project configuration
-var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-var configuration = builder.Build();
+var appSettings = GetAppSettings();
 
-var appSettings = new AppSettings();
-configuration.Bind(appSettings);
-
-// Table creation and data insertion
+// Variables
 var storageAccountName = appSettings.AzureStorageAccount.Name;
 var storageAccountKey = appSettings.AzureStorageAccount.Key;
 
-var tableServiceClient = new TableServiceClient
-(
-    new Uri($"https://{storageAccountName}.table.core.windows.net/"),
-    new TableSharedKeyCredential
-    (
-        storageAccountName,
-        storageAccountKey
-    )
-);
-
-const string tableName = "Books";
-tableServiceClient.CreateTableIfNotExists(tableName);
-
-var tableClient = tableServiceClient.GetTableClient(tableName);
-
-var jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "books.json");
-var jsonFileContent = File.ReadAllText(jsonFilePath);
-var books = JsonConvert.DeserializeObject<List<Book>>(jsonFileContent) ?? throw new Exception("Unable to deserialize books. Check JSON file and make sure it was included in the build.");
-
-foreach (var book in books)
-{
-    book.PartitionKey = book.Genre;
-    book.RowKey = book.Id;
-
-    tableClient.AddEntity(book);
-}
-
-// Create Entity (with filterable and sortable and whatever else fields)
-
-// Create Search Service
-// Do this in portal
-
-// Prepare Search Service client
-// Create Index
 var searchServiceEndpoint = appSettings.AzureSearchService.Url;
 var searchServiceAdminApiKey = appSettings.AzureSearchService.AdminApiKey;
 
-var searchIndexClient =
-    new SearchIndexClient(new Uri(searchServiceEndpoint), new AzureKeyCredential(searchServiceAdminApiKey));
+// Create Books table in Azure Storage
+const string tableName = "Books";
 
-var fieldBuilder = new FieldBuilder();
-var searchFields = fieldBuilder.Build(typeof(Book));
+var tableServiceManager = new TableServiceManager(storageAccountName, storageAccountKey);
 
-var searchIndex = new SearchIndex("my-index", searchFields);
-searchIndexClient.CreateOrUpdateIndex(searchIndex);
+tableServiceManager.CreateTable(tableName);
 
-// Create Data Source Connection
-var searchIndexerClient = new SearchIndexerClient(new Uri(searchServiceEndpoint), new AzureKeyCredential(searchServiceAdminApiKey));
+// Insert data from JSON file into Books table
+tableServiceManager.InsertRecordsIntoTable(tableName);
 
-var dataSourceConnection = new SearchIndexerDataSourceConnection
+// Builds & prepare the Index, Indexer, and Data Source Connection
+var searchServiceManager = new SearchServiceManager
 (
-    "my-index-data-source",
-    SearchIndexerDataSourceType.AzureTable,
-    $"DefaultEndpointsProtocol=https;AccountName={storageAccountName};AccountKey={storageAccountKey};EndpointSuffix=core.windows.net",
-    new SearchIndexerDataContainer(tableName)
+    searchServiceEndpoint,
+    searchServiceAdminApiKey
 );
 
-searchIndexerClient.CreateOrUpdateDataSourceConnection(dataSourceConnection);
+// Create Search Index infrastructure
+var searchIndex = searchServiceManager.CreateIndex();
 
-// Create Indexer
-var searchIndexer = new SearchIndexer("my-index-indexer", dataSourceConnection.Name, searchIndex.Name);
-searchIndexerClient.CreateOrUpdateIndexer(searchIndexer);
+// Create Data Source Connection for Indexer
+var searchIndexerClient = searchServiceManager.CreateIndexerDataSource(storageAccountName, storageAccountKey, tableName, out var dataSourceConnection);
 
-// Run Indexer
-searchIndexerClient.ResetIndexer(searchIndexer.Name);
-searchIndexerClient.RunIndexer(searchIndexer.Name);
+// Create Search Indexer to populate the Index (grabs data from the Data Source Connection and inserts into the Index)
+var searchIndexer = SearchServiceManager.CreateIndexer(dataSourceConnection, searchIndex, searchIndexerClient);
+
+// Run Indexer (where data is actually pulled from the Data Source Connection and inserted into the Index)
+SearchServiceManager.PopulateIndex(searchIndexerClient, searchIndexer);
 
 // Query data for the fields we setup in the index
-var searchClient = new SearchClient(new Uri(searchServiceEndpoint), searchIndex.Name, new AzureKeyCredential(searchServiceAdminApiKey));
-RunQueries(searchClient);
+var searchIndexDataRetriever = new SearchIndexDataRetriever
+(
+    searchServiceEndpoint,
+    searchServiceAdminApiKey,
+    searchIndex
+);
+
+var queryOneResults = searchIndexDataRetriever.SearchBooksForGeorgeOrwell();
+searchIndexDataRetriever.PrintSearchResults(queryOneResults);
+
+var queryTwoResults = searchIndexDataRetriever.FilterBooksCheaperThanTwentyFiveDollarsInDescendingOrder();
+searchIndexDataRetriever.PrintSearchResults(queryTwoResults);
+
+var queryThreeResults = searchIndexDataRetriever.SortBooksByPublishedYearInAscendingOrderAndGrabTopFive();
+searchIndexDataRetriever.PrintSearchResults(queryThreeResults);
+
+var queryFourResults = searchIndexDataRetriever.SearchBooksForTitleMatchingMockingBird();
+searchIndexDataRetriever.PrintSearchResults(queryFourResults);
+
 return;
 
-static void RunQueries(SearchClient searchClient)
+
+AppSettings GetAppSettings()
 {
-    Console.WriteLine("Query 1: Search for 'George Orwell':\n");
+    var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    var configuration = builder.Build();
 
-    var options = new SearchOptions();
+    var appSetting = new AppSettings();
+    configuration.Bind(appSetting);
 
-    GrabAllBookPropertiesFromTheIndex(options);
-
-    SearchResults<Book> results = searchClient.Search<Book>("George Orwell", options);
-
-    WriteDocuments(results);
-
-    Console.Write("Query 2: Apply a filter to find books cheaper than $25, order by Price in descending order:\n");
-
-    options = new SearchOptions
-    {
-        Filter = "Price lt 25",
-        OrderBy = { "Price desc" }
-    };
-
-    GrabAllBookPropertiesFromTheIndex(options);
-
-    results = searchClient.Search<Book>("*", options);
-
-    WriteDocuments(results);
-
-    Console.Write("Query 3: Search all the books, order by published year in ascending order, take the top 5 results:\n");
-
-    options = new SearchOptions
-    {
-        Size = 5,
-        OrderBy = { "PublishedYear asc" }
-    };
-
-    GrabAllBookPropertiesFromTheIndex(options);
-
-    results = searchClient.Search<Book>("*", options);
-
-    WriteDocuments(results);
-
-    Console.WriteLine("Query 4: Search the Title field for the term 'Mockingbird':\n");
-
-    options = new SearchOptions();
-    options.SearchFields.Add("Title");
-
-    GrabAllBookPropertiesFromTheIndex(options);
-
-    results = searchClient.Search<Book>("Mockingbird", options);
-
-    WriteDocuments(results);
-}
-
-static void WriteDocuments(SearchResults<Book> searchResults)
-{
-    foreach (var result in searchResults.GetResults())
-    {
-        Console.WriteLine(result.Document.ToString());
-    }
-
-    Console.WriteLine();
-}
-
-static void GrabAllBookPropertiesFromTheIndex(SearchOptions options)
-{
-    options.Select.Add("Id");
-    options.Select.Add("Title");
-    options.Select.Add("Author");
-    options.Select.Add("Genre");
-    options.Select.Add("PublishedYear");
-    options.Select.Add("Price");
+    return appSetting;
 }
