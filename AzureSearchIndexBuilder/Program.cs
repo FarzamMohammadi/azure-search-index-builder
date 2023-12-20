@@ -49,6 +49,9 @@ var searchIndexDataRetriever = new SearchIndexDataRetriever
     searchIndex
 );
 
+// Wait for the Indexer to finish before querying the data
+Thread.Sleep(30000); 
+
 var queryOneResults = searchIndexDataRetriever.SearchBooksForGeorgeOrwell();
 searchIndexDataRetriever.PrintSearchResults(queryOneResults);
 
@@ -62,7 +65,6 @@ var queryFourResults = searchIndexDataRetriever.SearchBooksForTitleMatchingMocki
 searchIndexDataRetriever.PrintSearchResults(queryFourResults);
 
 return;
-
 
 AppSettings GetAppSettings()
 {
