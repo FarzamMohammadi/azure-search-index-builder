@@ -20,10 +20,12 @@ public class SearchServiceManager
     public SearchIndex CreateIndex()
     {
         var searchIndexClient = new SearchIndexClient(_searchServiceAuthentication.Uri, _searchServiceAuthentication.Credentials);
-
+        
+        // Define & build the index fields
         var fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(Book));
-
+        
+        // Set the index name and fields
         var searchIndex = new SearchIndex("my-index", searchFields);
 
         searchIndexClient.CreateOrUpdateIndex(searchIndex);
@@ -66,6 +68,7 @@ public class SearchServiceManager
     public static void PopulateIndex(SearchIndexerClient searchIndexerClient, SearchIndexer searchIndexer)
     {
         searchIndexerClient.ResetIndexer(searchIndexer.Name);
+        
         searchIndexerClient.RunIndexer(searchIndexer.Name);
     }
 }
