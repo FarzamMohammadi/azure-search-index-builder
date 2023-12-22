@@ -22,7 +22,7 @@ public class SearchIndexDataRetriever
 
     public SearchResults<Book> SearchBooksForGeorgeOrwell()
     {
-        Console.WriteLine("Query 1: Search for 'George Orwell':\n");
+        Console.WriteLine("Query 1: Search for 'George Orwell':");
 
         var options = new SearchOptions();
 
@@ -35,7 +35,7 @@ public class SearchIndexDataRetriever
 
     public SearchResults<Book> FilterBooksCheaperThanTwentyFiveDollarsInDescendingOrder()
     {
-        Console.Write("Query 2: Apply a filter to find books cheaper than $25, order by Price in descending order:\n");
+        Console.WriteLine("Query 2: Apply a filter to find books cheaper than $25, order by Price in descending order:");
 
         var options = new SearchOptions
         {
@@ -52,7 +52,7 @@ public class SearchIndexDataRetriever
 
     public SearchResults<Book> SortBooksByPublishedYearInAscendingOrderAndGrabTopFive()
     {
-        Console.Write("Query 3: Search all the books, order by published year in ascending order, take the top 5 results:\n");
+        Console.WriteLine("Query 3: Search all the books, order by published year in ascending order, take the top 5 results:");
 
         var options = new SearchOptions
         {
@@ -69,11 +69,13 @@ public class SearchIndexDataRetriever
 
     public SearchResults<Book> SearchBooksForTitleMatchingMockingBird()
     {
-        Console.WriteLine("Query 4: Search the Title field for the term 'Mockingbird':\n");
+        Console.WriteLine("Query 4: Search the Title field for the term 'Mockingbird':");
 
-        var options = new SearchOptions();
-        options.SearchFields.Add("Title");
-
+        var options = new SearchOptions
+        {
+            SearchFields = { "Title" }
+        };
+        
         GrabAllBookFieldsFromTheIndex(options);
 
         var results = _searchClient.Search<Book>("Mockingbird", options);

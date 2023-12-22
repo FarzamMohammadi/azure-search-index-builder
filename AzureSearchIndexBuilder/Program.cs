@@ -75,7 +75,6 @@ SearchIndex CreateAndPopulateBooksSearchIndex(string azureSearchServiceEndpoint,
 
 void RunQueriesOnSearchIndexAndPrintResults(string azureSearchServiceEndpoint, string azureSearchServiceAdminApiKey, SearchIndex azureSearchIndex)
 {
-    // Query data for the fields we setup in the index
     var searchIndexDataRetriever = new SearchIndexDataRetriever
     (
         azureSearchServiceEndpoint,
